@@ -1,0 +1,18 @@
+body,table{
+	font-family: Arial;
+	font-size: 12px;
+}
+.search_content{
+	clear: left;
+	height: 15px;
+	padding: 4px;
+}
+.detail_title{
+	background-color: #8E93E9;
+	padding: 2px;
+	-moz-border-radius: 2px;
+}
+element.style {
+    max-height: 50px;
+    overflow: auto;
+}
