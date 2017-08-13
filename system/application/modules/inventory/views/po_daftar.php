@@ -122,6 +122,7 @@
 				$( ".telepon" ).val('');
 				$( ".telepon_2" ).val('');
 				$( ".telepon_3" ).val('');
+				$( ".email" ).val('');
 				$( ".jumlah_bayar" ).val('');
 				$( ".total_pesan" ).val(0);
 				$( ".total_seluruh" ).val('');
@@ -193,6 +194,7 @@
 				$( ".telepon" ).val('');
 				$( ".telepon_2" ).val('');
 				$( ".telepon_3" ).val('');
+				$( ".email" ).val('');
 				$( ".jumlah_bayar" ).val('');
 				$( ".total_pesan." ).val(0);
 				$( ".total_seluruh" ).val('');
@@ -433,6 +435,7 @@
 		var nama_cara_pembayaran 	= dataArr[5];
 		var telepon_2	 			= dataArr[7];
 		var telepon_3	 			= dataArr[8];
+		var email	 			= dataArr[8];
 		
 		$(document).ready(function(){
 			$("#no_po").val(no_po);
@@ -441,6 +444,7 @@
 			$("#telepon").val(telepon);
 			$("#telepon_2").val(telepon_2);
 			$("#telepon_3").val(telepon_3);
+			$("#email").val(email);
 			$("#jumlah_bayar").val(jumlah_bayar);
 		});
 	}
@@ -489,6 +493,7 @@
 		var telepon 				= dataArr[3];
 		var telepon2 				= dataArr[4];
 		var telepon3 				= dataArr[5];
+		var email 				= dataArr[5];
 		var jumlah_bayar			= dataArr[6];
 		var nama_cara_pembayaran 	= dataArr[7];
 		var id_cara_pembayaran 		= dataArr[8];
@@ -505,6 +510,7 @@
 			$(".telepon").val(telepon);
 			$(".telepon_2").val(telepon2);
 			$(".telepon_3").val(telepon3);
+			$(".email").val(email);
 			$(".total_seluruh").val(jumlah_bayar);
 			$(".jumlah_bayar").val(jum_pembayaran);
 			$(".cara_bayar").val(id_cara_pembayaran);
@@ -596,6 +602,7 @@
 		var telepon 				= dataArr[3];
 		var telepon_2 				= dataArr[4];
 		var telepon_3 				= dataArr[5];
+		var email 				= dataArr[5];
 		var jumlah_bayar			= dataArr[6];
 		var nama_cara_pembayaran 	= dataArr[7];
 		var id_cara_pembayaran 		= dataArr[8];
@@ -611,6 +618,7 @@
 			$(".telepon").val(telepon);
 			$(".telepon_2").val(telepon_2);
 			$(".telepon_3").val(telepon_3);
+			$(".email").val(email);
 			$(".total_seluruh").val(jumlah_bayar);
 			$(".jumlah_bayar").val(jum_pembayaran);
 			$(".cara_bayar").val(id_cara_pembayaran);
@@ -899,6 +907,11 @@
             <td style="width: 50px;">&nbsp;</td>
         </tr>
         <tr>
+        	<td style="width: 150px;">Email</td><td>:</td><td>&nbsp;</td>
+            <td><input type="email" name="email" class="email" size="25" value="" /></td>
+            <td style="width: 50px;">&nbsp;</td>
+        </tr>
+        <tr>
         	<td style="width: 150px;">Total Keseluruhan</td><td>:</td><td>&nbsp;</td>
             <td><input type="text" name="total_seluruh" class="total_seluruh" size="25" value="" readonly="1" /></td>
         </tr>
@@ -910,14 +923,10 @@
 		<tr>
         	<td style="width: 150px;">Via Pemesanan</td><td>:</td><td>&nbsp;</td>
             <td>
-				<select name="via_pemesanan">
-					<option value="langsung">Langsung</option>
-					<option value="email">Email</option>
-					<option value="telepon">Telepon</option>
-					<option value="sms">SMS</option>
-					<option value="ibu">IBU</option>
-					<option value="bapak">BAPAK</option>
-				</select>
+	            <?php
+	            $arrpesanan = array_jenis_pesanan();
+	            echo form_dropdown('via_pemesanan',$arrpesanan,'');
+	            ?>
 			</td>
             <td style="width: 50px;">&nbsp;</td>
             <td></td>

@@ -152,6 +152,91 @@ class Model_po extends Model
 		}
 		return $result;
 	}
+
+	function daftar_list_po_harian($data)
+	{
+		$data_query = "";
+		if(is_array($data)){
+			extract($data);
+			if(isset($tanggal)){
+				if($tanggal){
+//					$tanggal = explode_date($tanggal,0);
+					$data_query .= "AND a.tanggal_po='$tanggal'";
+				}
+			}
+
+			if(isset($via)){
+				if($via){
+					$data_query .= "AND a.via_pemesanan ='$via' ";
+				}
+			}
+		}
+
+		$query = $this->db->query("
+		SELECT a.no_po, a.tanggal_po, a.nama_customer, a.telepon, a.telepon_2, a.telepon_3, a.bayar_awal, a.id_cara_pembayaran,
+a.jumlah_bayar, a.nama_penerima, a.via_pemesanan, a.tanggal_pesan,
+(
+	SELECT
+		COUNT(b.no_po)
+	FROM
+		tb_penjualan b
+	WHERE
+		b.no_po = a.no_po
+	AND b.active = '1'
+	) AS jumlah_po, a.tgl_diambil, a.is_diambil, a.email
+FROM tb_po a
+WHERE a.active = 1 $data_query
+ORDER BY a.no_po DESC ");
+
+		$result = $query->result();
+		return $result;
+	}
+
+	function daftar_list_po_pengambilan($data)
+	{
+		$data_query = "";
+		if(is_array($data)){
+			extract($data);
+			if(isset($filter)){
+				if($filter){
+					if(isset($tanggal)){
+						if($tanggal){
+							switch ($filter){
+								case 'transaksi':
+									$data_query .= "AND a.tanggal_po='$tanggal'";
+									break;
+								case 'pengambilan':
+									$data_query .= "AND DATE(a.tgl_diambil) = '$tanggal'";
+									break;
+							}
+
+						}
+					}
+				}
+			}
+		}
+
+		$query = $this->db->query("
+		SELECT a.no_po, a.tanggal_po, a.nama_customer, a.telepon, a.telepon_2, a.telepon_3, a.bayar_awal, a.id_cara_pembayaran,
+a.jumlah_bayar, a.nama_penerima, a.via_pemesanan, a.tanggal_pesan,
+(
+	SELECT
+		COUNT(b.no_po)
+	FROM
+		tb_penjualan b
+	WHERE
+		b.no_po = a.no_po
+	AND b.active = '1'
+	) AS jumlah_po, a.tgl_diambil, a.is_diambil, a.email
+FROM tb_po a
+WHERE a.active = 1 $data_query
+ORDER BY a.no_po DESC ");
+
+		$result = $query->result();
+		return $result;
+	}
+
+
     
 	function get_detail_po($data)
     {
@@ -162,7 +247,7 @@ class Model_po extends Model
     
     function get_po($data)
     {
-        $result = $this->db->query("SELECT a.no_po, a.tanggal_po, a.nama_customer, a.telepon, a.telepon_2, a.telepon_3, a.bayar_awal, a.id_cara_pembayaran, a.jumlah_bayar, b.nama_cara_pembayaran FROM tb_po a LEFT JOIN tb_cara_pembayaran b ON b.id_cara_pembayaran=a.id_cara_pembayaran WHERE a.no_po='".$data."'");
+        $result = $this->db->query("SELECT a.no_po, a.tanggal_po, a.nama_customer, a.telepon, a.telepon_2, a.telepon_3, a.bayar_awal, a.id_cara_pembayaran, a.jumlah_bayar, b.nama_cara_pembayaran, a.email, a.tgl_diambil, a.is_diambil FROM tb_po a LEFT JOIN tb_cara_pembayaran b ON b.id_cara_pembayaran=a.id_cara_pembayaran WHERE a.no_po='".$data."'");
 		
 		return $result;
     }
@@ -201,6 +286,24 @@ class Model_po extends Model
     function update_po_bayar($data)
     {
         $result = $this->db->query("update tb_pembayaran set tanggal_pembayaran='".$data['tanggal_pembayaran']."', id_cara_pembayaran='".$data['id_cara_pembayaran']."', jumlah_bayar='".$data['jumlah_bayar']."' where id_pembayaran='".$data['id_pembayaran']."';");
+    }
+
+    function verifikasi_pengambilan($data){
+	    $result = $this->db->query("
+			update tb_po 
+			set tgl_diambil='".$data['tgl_ambil']."', 
+			is_diambil='".$data['is_diambil']."' 
+			where no_po ='".$data['no_po']."'");
+	    return $result;
+    }
+
+    function batal_pengambilan($data){
+	    $result = $this->db->query("
+			update tb_po 
+			set tgl_diambil=null, 
+			is_diambil=null 
+			where no_po ='".$data['no_po']."'");
+	    return $result;
     }
     
     function update_po($data)

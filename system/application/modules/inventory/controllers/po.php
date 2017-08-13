@@ -55,7 +55,8 @@ class Po extends Controller
 		$id_cara_pembayaran = $this->input->post('id_cara_pembayaran');
 		$total_seluruh 		= $this->input->post('total_seluruh');
 		$bayar_awal 		= $this->input->post('bayar_awal');
-		
+		$email 		= $this->input->post('email');
+
 		$nama_penerima 		= $this->input->post('nama_penerima');
 		$via_pemesanan 		= $this->input->post('via_pemesanan');
 		$tgl_pemesanan 		= $this->input->post('tgl_pemesanan');
@@ -141,7 +142,8 @@ class Po extends Controller
 				'id_cara_pembayaran'    => $id_cara_pembayaran,	
 				'tanggal_pesan'			=> $tanggal_pesan,			
 				'nama_penerima'    		=> $nama_penerima,
-				'via_pemesanan'    		=> $via_pemesanan
+				'via_pemesanan'    		=> $via_pemesanan,
+				'email'    		=> $email
 			);
 			$this->model_po->add_po($data_input);
 			$no=0;
@@ -173,7 +175,7 @@ class Po extends Controller
 		}
 		echo json_encode($data);
 	}
-	
+
 	function report_nota($no_po)
 	{
 		$this->load->library('fpdf');
@@ -185,6 +187,101 @@ class Po extends Controller
 		
 		$this->load->view("print_nota",$data);
 	}
+
+	function detail_po($date="", $filter = "")
+	{
+		//$status = get_status_user();
+		if($date=="")
+			$date=date('Y-m-d');
+
+		$mydata = array(
+			'form'				=> 'inventory/po/delete_po',
+			'simpan'			=> 'class="disable" disabled="disabled"',
+			'edit'				=> 'class="disable" disabled="disabled"',
+			'batal'				=> '',
+			'cetak'				=> 'class="disable" disabled="disabled"',
+			'active_menu'		=> 'class="active_po_daftar"',
+			'active_menus'		=> 'id="active_menus_po"',
+			'page'			    => 'po_page',
+			'menu'			    => 'po_detail',
+			'list_cara_bayar'   => $this->model_cara_pembayaran->select_cara_bayar(),
+//			'no_po'             => $generate_no_po,
+			'data_detail'       => '',
+			'date'       		=> $date,
+			'filter'       		=> $filter,
+			'list_barang'		=> $this->model_barang->summary_barang_po($date),
+			'daftar_list_po'    => $this->model_po->daftar_list_po_harian(array(
+				'tanggal' => $date,
+				'via' => $filter,
+			)),
+			'data_detail_po'	=> $this->data_detail_po_null('')
+			//'user_status'		=> $status
+		);
+
+		$this->load->view('mainpage', $mydata);
+	}
+
+	function pengambilan_po($date="", $filter = "transaksi"){
+		//$status = get_status_user();
+		if($date=="")
+			$date=date('Y-m-d');
+		$mydata = array(
+			'form'				=> 'inventory/po/delete_po',
+			'simpan'			=> 'class="disable" disabled="disabled"',
+			'edit'				=> 'class="disable" disabled="disabled"',
+			'batal'				=> '',
+			'cetak'				=> 'class="disable" disabled="disabled"',
+			'active_menu'		=> 'class="active_po_daftar"',
+			'active_menus'		=> 'id="active_menus_po"',
+			'page'			    => 'po_page',
+			'menu'			    => 'po_pengambilan',
+//			'list_cara_bayar'   => $this->model_cara_pembayaran->select_cara_bayar(),
+//			'no_po'             => $generate_no_po,
+			'data_detail'       => '',
+			'date'       		=> $date,
+			'filter'       		=> $filter,
+//			'list_barang'		=> $this->model_barang->summary_barang_po($date),
+			'daftar_list_po'    => $this->model_po->daftar_list_po_pengambilan(array(
+				'tanggal' => $date,
+				'filter' => $filter,
+			)),
+//			'data_detail_po'	=> $this->data_detail_po_null('')
+			//'user_status'		=> $status
+		);
+
+		$this->load->view('mainpage', $mydata);
+    }
+
+    function batal_pengambilan($no_po){
+	    $this->load->library('user_agent');
+	    $data_input = array(
+		    'no_po'         => $no_po,
+	    );
+	    $this->model_po->batal_pengambilan($data_input);
+
+	    redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    function verifikasi_pengambilan($no_po){
+//	    $no_po 				= $this->input->post('no_po');
+	    $data_input = array(
+		    'no_po'         => $no_po,
+		    'is_diambil'    => 1,
+		    'tgl_ambil'     => date('Y-m-d h:i:s'),
+	    );
+	    $update = $this->model_po->verifikasi_pengambilan($data_input);
+	    if($update){
+
+	        $imgvalid = '<img src="'.base_url().'image/check.jpg'.'" width="30" />';
+		    $data_input['status'] = true;
+		    $data_input['img_valid'] = $imgvalid;
+		    echo json_encode($data_input);
+	    }else{
+		    $data_input['status'] = false;
+		    echo json_encode($data_input);
+        }
+
+    }
 	
 	function view_po()
 	{
@@ -192,6 +289,24 @@ class Po extends Controller
 		$ar_tgl = explode('/',$tgl);
 		$date 	= $ar_tgl[2].'-'.$ar_tgl[1].'-'.$ar_tgl[0];
 		echo base_url().'index.php/inventory/po/index/'.$date;
+	}
+
+	function view_detail_pemesanan()
+	{
+		$tgl 	= $this->input->post('tanggal');
+		$filter 	= $this->input->post('filter');
+		$ar_tgl = explode('/',$tgl);
+		$date 	= $ar_tgl[2].'-'.$ar_tgl[1].'-'.$ar_tgl[0];
+		echo base_url().'index.php/inventory/po/detail_po/'.$date . '/' .$filter;
+	}
+
+	function view_pesanan_harian()
+	{
+		$tgl 	= $this->input->post('tanggal');
+		$filter 	= $this->input->post('filter');
+		$ar_tgl = explode('/',$tgl);
+		$date 	= $ar_tgl[2].'-'.$ar_tgl[1].'-'.$ar_tgl[0];
+		echo base_url().'index.php/inventory/po/pengambilan_po/'.$date . '/' .$filter;
 	}
 	
 	function data_detail_po_null($data)
@@ -248,7 +363,11 @@ class Po extends Controller
 						 currency_format($po['jumlah_bayar'],0).",".
 						 $po['nama_cara_pembayaran'].",".
 						 $po['telepon_2'].",".
-						 $po['telepon_3'];
+						 $po['telepon_3'] . ",".
+						 $po['email'] . ",".
+                         (($po['tgl_diambil'])? explode_date($po['tgl_diambil'],1):'') . ",".
+						 $po['is_diambil'] . ","
+            ;
 		}
 		
 		echo $load_data;
@@ -684,7 +803,7 @@ class Po extends Controller
 							<td></td>
 							<td>Nama</td>
 							<td>:</td>
-							<td style="letter-spacing:3px;">'.$nama.'</td>
+							<td style="letter-spacing:3px;">'.strtoupper($nama).'</td>
 						</tr>
 							<td></td>
 							<td>Tlpn</td>
@@ -778,6 +897,117 @@ class Po extends Controller
 		}
 		$ret .= '</div>';
 		echo $ret;
+	}
+
+	function print_pemesanan_harian(){
+		$tanggal = $this->input->post('tanggal');
+		$via = $this->input->post('via');
+		$ar_tgl = explode('/',$tanggal);
+		$tanggal 	= $ar_tgl[2].'-'.$ar_tgl[1].'-'.$ar_tgl[0];
+
+		$data_po = $this->model_po->daftar_list_po_harian(array(
+			'tanggal' => $tanggal,
+			'via' => $via,
+		));
+		if($data_po){
+			?>
+            <center>
+                <h1>Laporan Daftar Pesanan Harian</h1>
+                <h3>Tanggal <?php echo date('d-m-Y' , strtotime($tanggal))?></h3>
+            </center>
+            <br><br>
+			<div>
+				<style type="text/css">
+					@page {
+						size: A4;
+						margin: 25mm 15mm 15mm 15mm;
+					}
+					@media print {
+						.page-break { display: block; page-break-before: always; }
+						html, body {
+							width: 210mm;
+							height: 297mm;
+						}
+						.tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc; width: 100%}
+						.tg td{font-family:Arial, sans-serif;font-size:10pt;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}
+                        .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}
+						.tg .header-label{font-weight:bold;background-color:#efefef;color:#000000;text-align:center;vertical-align:top}
+						.tg .text-right {text-align:right;vertical-align:middle}
+						.tg .text-left{background-color:#f9f9f9;vertical-align:middle}
+						.tg .tg-right-odd{background-color:#f9f9f9;text-align:right;vertical-align:middle}
+						.no-print, .no-print *
+						{
+							display: none !important;
+						}
+					}
+
+					.tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc; width: 100%}
+					.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}
+					.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}
+					.tg .header-label{font-weight:bold;background-color:#efefef;color:#000000;text-align:center;vertical-align:top}
+					.tg .text-right {text-align:right;vertical-align:middle}
+					.tg .text-left{background-color:#f9f9f9;vertical-align:middle}
+					.tg .tg-right-odd{background-color:#f9f9f9;text-align:right;vertical-align:middle}
+
+					.cetak{ background-color: #4CAF50; /* Green */
+						border: none;
+						color: white;
+						padding: 15px 32px;
+						text-align: center;
+						text-decoration: none;
+						display: inline-block;
+						font-size: 16px;
+						margin-bottom: 10px;
+					}
+					body {
+						font-family:Arial;
+					}
+				</style>
+				<button type="button" class="cetak no-print" onclick="window.print()">Cetak</button>
+				<table class="tg">
+					<thead>
+					<tr>
+						<th class="header-label">No</th>
+						<th class="header-label">Nama Customer</th>
+						<th class="header-label">Phone</th>
+						<th class="header-label">Email</th>
+						<th class="header-label">Total Transaksi</th>
+						<th class="header-label">Tanggal Diambil</th>
+						<th class="header-label">Keterangan</th>
+					</tr>
+					</thead>
+					<tbody>
+						<?php
+						$i=1;
+						$totalTransaksi = 0;
+						foreach ($data_po as $row){
+							?>
+							<tr>
+								<td><?php echo $i?></td>
+								<td><?php echo $row->nama_customer?></td>
+								<td><?php echo $row->telepon?></td>
+								<td><?php echo $row->email?></td>
+								<td style="text-align: right"><?php echo number_format($row->jumlah_bayar,2,',','.')?></td>
+								<td><?php echo ($row->is_diambil)? date('d-m-Y h:i:s',strtotime($row->tgl_diambil)):'Belum Diambil'?></td>
+								<td><?php echo get_jenis_pesanan($row->via_pemesanan)?></td>
+							</tr>
+							<?php
+							$totalTransaksi +=$row->jumlah_bayar;
+							$i ++;
+						}
+						?>
+					</tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">Total</td>
+                            <td colspan="5" style="text-align: center; font-weight: bold"><?php echo number_format($totalTransaksi,2,',','.')?></td>
+                        </tr>
+                    </tfoot>
+				</table>
+			</div>
+			<?php
+		}
+
 	}
 }
 ?>

@@ -8,7 +8,7 @@
 	foreach($data_po->result_array() as $po)
 	{
 		$tanggal = explode_date($po['tanggal_po'], 1);
-		$nama = $po['nama_customer'];
+		$nama = strtoupper($po['nama_customer']);
 		$telepon1 = $po['telepon'];
 		$telepon2 = $po['telepon_2'];
 		$telepon3 = $po['telepon_3'];
@@ -36,26 +36,25 @@
 	if(strlen($nama) > 14){
 		$nama1 = substr($nama, 0, 13);
 		$nama2 = substr($nama, 13, strlen($nama));
-		$pdf->Cell(25,5,$nama1,0,0,'L');
+		$pdf->Cell(25,5,strtoupper($nama1),0,0,'L');
 		
 		if(strlen(substr($nama, 13, strlen($nama))) > 14){
 			$pdf->Ln(5);
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(57,5,'',0,0,'L');
 			$pdf->Cell(10,5,'',0,0,'L');
-			$pdf->Cell(40,5,$nama2,0,0,'L');
-		}
-		else{
+			$pdf->Cell(40,5,strtoupper($nama2),0,0,'L');
+		}else{
 			$pdf->Ln(5);
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(57,5,'',0,0,'L');
 			$pdf->Cell(10,5,'',0,0,'L');
 			$pdf->Cell(2,5,'',0,0,'L');
-			$pdf->Cell(25,5,$nama2,0,0,'L');
+			$pdf->Cell(25,5,strtoupper($nama2),0,0,'L');
 		}
 	}
 	else
-		$pdf->Cell(25,5,$nama,0,0,'L');
+		$pdf->Cell(25,5,strtoupper($nama),0,0,'L');
 	
 	$pdf->Ln(5);
 	$pdf->SetFont('Arial','',9);
