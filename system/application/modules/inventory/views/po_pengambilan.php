@@ -206,20 +206,20 @@
 
     function print_po(no_po){
         var tgl = $('#datepicker').val();
-        var via_pemesanan = $('#via_pemesanan').val();
+        var filter = $('#filter').val();
         $.ajax({
             async: false,
             type: "POST",
-            url: "<?php echo site_url('inventory/po/print_pemesanan_harian');?>",
+            url: "<?php echo site_url('inventory/po/print_pengambilan_pemesanan_harian');?>",
             data: {
                 tanggal: tgl,
-                via: via_pemesanan,
+                filter: filter,
             },
             cache: false,
             success: function(data){
                 console.log(data);
                 var mywindow = window.open('', 'my div', 'height=400,width=600');
-                mywindow.document.write('<html><head><title>Laporan Pemesanan Harian</title>');
+                mywindow.document.write('<html><head><title>Laporan Pengambilan Pemesanan Harian</title>');
 				/*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
                 mywindow.document.write('</head><body>');
                 mywindow.document.write(data);

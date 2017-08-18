@@ -912,7 +912,7 @@ class Po extends Controller
 		if($data_po){
 			?>
             <center>
-                <h1>Laporan Daftar Pesanan Harian</h1>
+                <h1>Laporan Daftar Transaksi Pesanan Harian</h1>
                 <h3>Tanggal <?php echo date('d-m-Y' , strtotime($tanggal))?></h3>
             </center>
             <br><br>
@@ -968,6 +968,7 @@ class Po extends Controller
 					<thead>
 					<tr>
 						<th class="header-label">No</th>
+						<th class="header-label">Tgl Pesan</th>
 						<th class="header-label">Nama Customer</th>
 						<th class="header-label">Phone</th>
 						<th class="header-label">Email</th>
@@ -984,6 +985,15 @@ class Po extends Controller
 							?>
 							<tr>
 								<td><?php echo $i?></td>
+								<td><?php
+									$tmp = explode_date($row->tanggal_pesan, 1);
+									$arr_date = explode('/', $tmp);
+									$tgl_pesan = $arr_date[0].'-'.$arr_date[1];
+									if($tgl_pesan=='00-00'){
+										$tgl_pesan = '';
+									}
+									echo $tgl_pesan;
+                                    ?></td>
 								<td><?php echo $row->nama_customer?></td>
 								<td><?php echo $row->telepon?></td>
 								<td><?php echo $row->email?></td>
@@ -1000,7 +1010,7 @@ class Po extends Controller
                     <tfoot>
                         <tr>
                             <td colspan="2">Total</td>
-                            <td colspan="5" style="text-align: center; font-weight: bold"><?php echo number_format($totalTransaksi,2,',','.')?></td>
+                            <td colspan="6" style="text-align: center; font-weight: bold"><?php echo number_format($totalTransaksi,2,',','.')?></td>
                         </tr>
                     </tfoot>
 				</table>
@@ -1009,5 +1019,127 @@ class Po extends Controller
 		}
 
 	}
+
+	function print_pengambilan_pemesanan_harian(){
+		$tanggal = $this->input->post('tanggal');
+		$filter = $this->input->post('filter');
+		$ar_tgl = explode('/',$tanggal);
+		$tanggal 	= $ar_tgl[2].'-'.$ar_tgl[1].'-'.$ar_tgl[0];
+
+		$data_po = $this->model_po->daftar_list_po_pengambilan(array(
+			'tanggal' => $tanggal,
+			'filter' => $filter,
+		));
+		if($data_po){
+			?>
+            <center>
+                <h1>Laporan Daftar Pengambilan Pesanan Harian</h1>
+                <h3>Tanggal <?php echo date('d-m-Y' , strtotime($tanggal))?></h3>
+            </center>
+            <br><br>
+            <div>
+                <style type="text/css">
+                    @page {
+                        size: A4;
+                        margin: 25mm 15mm 15mm 15mm;
+                    }
+                    @media print {
+                        .page-break { display: block; page-break-before: always; }
+                        html, body {
+                            width: 210mm;
+                            height: 297mm;
+                        }
+                        .tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc; width: 100%}
+                        .tg td{font-family:Arial, sans-serif;font-size:10pt;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}
+                        .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}
+                        .tg .header-label{font-weight:bold;background-color:#efefef;color:#000000;text-align:center;vertical-align:top}
+                        .tg .text-right {text-align:right;vertical-align:middle}
+                        .tg .text-left{background-color:#f9f9f9;vertical-align:middle}
+                        .tg .tg-right-odd{background-color:#f9f9f9;text-align:right;vertical-align:middle}
+                        .no-print, .no-print *
+                        {
+                            display: none !important;
+                        }
+                    }
+
+                    .tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc; width: 100%}
+                    .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}
+                    .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}
+                    .tg .header-label{font-weight:bold;background-color:#efefef;color:#000000;text-align:center;vertical-align:top}
+                    .tg .text-right {text-align:right;vertical-align:middle}
+                    .tg .text-left{background-color:#f9f9f9;vertical-align:middle}
+                    .tg .tg-right-odd{background-color:#f9f9f9;text-align:right;vertical-align:middle}
+
+                    .cetak{ background-color: #4CAF50; /* Green */
+                        border: none;
+                        color: white;
+                        padding: 15px 32px;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        font-size: 16px;
+                        margin-bottom: 10px;
+                    }
+                    body {
+                        font-family:Arial;
+                    }
+                </style>
+                <button type="button" class="cetak no-print" onclick="window.print()">Cetak</button>
+                <table class="tg">
+                    <thead>
+                    <tr>
+                        <th class="header-label">No</th>
+                        <th class="header-label">Tgl Pesan</th>
+                        <th class="header-label">Nama Customer</th>
+                        <th class="header-label">Phone</th>
+                        <th class="header-label">Email</th>
+                        <th class="header-label">Total Transaksi</th>
+                        <th class="header-label">Tanggal Diambil</th>
+                        <th class="header-label">Keterangan</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+					<?php
+					$i=1;
+					$totalTransaksi = 0;
+					foreach ($data_po as $row){
+						?>
+                        <tr>
+                            <td><?php echo $i?></td>
+                            <td><?php
+								$tmp = explode_date($row->tanggal_pesan, 1);
+								$arr_date = explode('/', $tmp);
+								$tgl_pesan = $arr_date[0].'-'.$arr_date[1];
+								if($tgl_pesan=='00-00'){
+									$tgl_pesan = '';
+								}
+								echo $tgl_pesan;
+								?></td>
+                            <td><?php echo $row->nama_customer?></td>
+                            <td><?php echo $row->telepon?></td>
+                            <td><?php echo $row->email?></td>
+                            <td style="text-align: right"><?php echo number_format($row->jumlah_bayar,2,',','.')?></td>
+                            <td><?php echo ($row->is_diambil)? date('d-m-Y h:i:s',strtotime($row->tgl_diambil)):'Belum Diambil'?></td>
+                            <td><?php echo get_jenis_pesanan($row->via_pemesanan)?></td>
+                        </tr>
+						<?php
+						$totalTransaksi +=$row->jumlah_bayar;
+						$i ++;
+					}
+					?>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2">Total</td>
+                        <td colspan="6" style="text-align: center; font-weight: bold"><?php echo number_format($totalTransaksi,2,',','.')?></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+			<?php
+		}
+
+	}
+
 }
 ?>

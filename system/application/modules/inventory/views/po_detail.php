@@ -32,6 +32,7 @@
             <thead>
             <tr>
                 <td class="labels_dpo" style="width:100px;">No</td>
+                <td class="labels_dpo" style="width:100px !important;">Tgl Pesan</td>
                 <td class="labels_dpo" style="width:250px !important;">Nama Customer</td>
                 <td class="labels_dpo" style="width:130px;">Phone</td>
                 <td class="labels_dpo" style="width:150px;">Email</td>
@@ -51,6 +52,15 @@
 	                    ?>
                         <tr class="isi_list">
                             <td class="labelss_dpo" style="width:100px;"><?php echo $i?></td>
+                            <td class="labelss_dpo" style="width:100px !important;"><?php
+	                            $tmp = explode_date($row->tanggal_pesan, 1);
+	                            $arr_date = explode('/', $tmp);
+	                            $tgl_pesan = $arr_date[0].'-'.$arr_date[1];
+	                            if($tgl_pesan=='00-00'){
+		                            $tgl_pesan = '';
+	                            }
+	                            echo $tgl_pesan;
+                                ?></td>
                             <td class="labelss_dpo" style="width:250px !important;"><?php echo $row->nama_customer?></td>
                             <td class="labelss_dpo" style="width:130px;"><?php echo $row->telepon?></td>
                             <td class="labelss_dpo" style="width:150px;"><?php echo $row->email?></td>
