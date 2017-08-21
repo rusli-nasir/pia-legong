@@ -54,4 +54,24 @@
 			return $mydata;
 		}
 	}
+
+	function get_nama_barang($id){
+		$jenis = '';
+		$jenis_detail = '';
+		if($id == 'k')
+			$jenis = 'Keju';
+		elseif($id == 'kh')
+			$jenis = 'Kacang Hijau';
+		elseif($id == 'c')
+			$jenis = 'Coklat';
+		elseif($id == 'cp'){
+			$jenis = 'Campur';
+			$jenis_detail = '(Keju + Coklat)';
+		}
+
+		return array(
+			'jenis' => $jenis,
+			'jenis_detail' => $jenis_detail
+		);
+	}
 ?>

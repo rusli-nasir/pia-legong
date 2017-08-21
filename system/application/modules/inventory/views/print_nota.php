@@ -24,15 +24,15 @@
 	$pdf->Ln(1);
 	$pdf->SetFont('Arial','',10);
 	$pdf->Cell(57,5,'',0,0,'L');
-	$pdf->Cell(10,5,'Tgl',0,0,'L');
-	$pdf->Cell(2,5,':',0,0,'L');
+	$pdf->Cell(12,5,'Tgl',0,0,'L');
+	$pdf->Cell(4,5,':',0,0,'L');
 	$pdf->Cell(25,5,$tanggal,0,0,'L');
 	
 	$pdf->Ln(5);
 	$pdf->SetFont('Arial','',10);
 	$pdf->Cell(57,5,'',0,0,'L');
-	$pdf->Cell(10,5,'Nama',0,0,'L');
-	$pdf->Cell(2,5,':',0,0,'L');
+	$pdf->Cell(12,5,'Nama',0,0,'L');
+	$pdf->Cell(4,5,':',0,0,'L');
 	if(strlen($nama) > 14){
 		$nama1 = substr($nama, 0, 13);
 		$nama2 = substr($nama, 13, strlen($nama));
@@ -42,14 +42,14 @@
 			$pdf->Ln(5);
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(57,5,'',0,0,'L');
-			$pdf->Cell(10,5,'',0,0,'L');
+			$pdf->Cell(12,5,'',0,0,'L');
 			$pdf->Cell(40,5,strtoupper($nama2),0,0,'L');
 		}else{
 			$pdf->Ln(5);
 			$pdf->SetFont('Arial','',10);
 			$pdf->Cell(57,5,'',0,0,'L');
-			$pdf->Cell(10,5,'',0,0,'L');
-			$pdf->Cell(2,5,'',0,0,'L');
+			$pdf->Cell(12,5,'',0,0,'L');
+			$pdf->Cell(4,5,'',0,0,'L');
 			$pdf->Cell(25,5,strtoupper($nama2),0,0,'L');
 		}
 	}
@@ -59,22 +59,22 @@
 	$pdf->Ln(5);
 	$pdf->SetFont('Arial','',9);
 	$pdf->Cell(57,5,'',0,0,'L');
-	$pdf->Cell(10,5,'Tlp',0,0,'L');
-	$pdf->Cell(2,5,':',0,0,'L');
+	$pdf->Cell(12,5,'Tlp',0,0,'L');
+	$pdf->Cell(4,5,':',0,0,'L');
 	$pdf->Cell(25,5,$telepon1,0,0,'L');
 	
 	$pdf->Ln(5);
 	$pdf->SetFont('Arial','',9);
 	$pdf->Cell(57,5,'',0,0,'L');
-	$pdf->Cell(10,5,'',0,0,'L');
-	$pdf->Cell(2,5,'',0,0,'L');
+	$pdf->Cell(12,5,'',0,0,'L');
+	$pdf->Cell(4,5,'',0,0,'L');
 	$pdf->Cell(25,5,$telepon2,0,0,'L');
 	
 	$pdf->Ln(5);
 	$pdf->SetFont('Arial','',9);
 	$pdf->Cell(57,5,'',0,0,'L');
-	$pdf->Cell(10,5,'',0,0,'L');
-	$pdf->Cell(2,5,'',0,0,'L');
+	$pdf->Cell(12,5,'',0,0,'L');
+	$pdf->Cell(4,5,'',0,0,'L');
 	$pdf->Cell(25,5,$telepon3,0,0,'L');
 	
 	$pdf->Ln(10);

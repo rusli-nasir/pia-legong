@@ -73,6 +73,45 @@
                             <td class="labelss_dpo" style="width:150px;"><?php echo ($row->is_diambil)? date('d-m-Y', strtotime($row->tgl_diambil)):'Belum diambil'?></td>
                             <td class="labelss_dpo"><?php echo get_jenis_pesanan($row->via_pemesanan)?></td>
                         </tr>
+                        <tr>
+                            <td class="labelss_dpo" colspan="8">
+                                <h3>Detail PO</h3>
+                                <?php
+                                    $detailPo = $this->model_po->get_detail_po($row->no_po)->result();
+                                    if($detailPo){
+	                                    ?>
+                                        <table width="100%">
+                                            <thead>
+                                            <tr>
+                                                <th>Nama Barang</th>
+                                                <th>Qty</th>
+                                                <th>Harga</th>
+                                                <th>Sub Total</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            foreach ($detailPo as $row_data){
+                                                ?>
+                                                <tr>
+                                                    <td class="labelss_dpo"><?php
+	                                                    $nama_barang = get_nama_barang($row_data->nama_barang);
+	                                                    echo $nama_barang['jenis'] . ' ' . $nama_barang['jenis_detail'];
+                                                        ?></td>
+                                                    <td class="labelss_dpo"><?php echo number_format($row_data->stok_pesan,2,',','.')?></td>
+                                                    <td class="labelss_dpo"><?php echo number_format($row_data->harga_barang,2,',','.')?></td>
+                                                    <td class="labelss_dpo"><?php echo number_format($row_data->total_harga,2,',','.')?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            </tbody>
+                                        </table>
+	                                    <?php
+                                    }
+                                ?>
+                            </td>
+                        </tr>
 	                    <?php
                         $totalTransaksi +=$row->jumlah_bayar;
                         $i++;
