@@ -120,6 +120,7 @@
         <legend>Summary Penjualan Stok</legend>
 		<div style="margin-bottom:10px; text-align:right;">
 			<a href="<?php echo site_url('inventory/laporan/export_to_excel/'.$this->uri->segment(4));?>"><input type="button" value="Export Excel" /></a>
+			<a href="<?php echo site_url('inventory/laporan/export_to_pdf/'.$this->uri->segment(4));?>"><input type="button" value="Export Pdf" /></a>
 		</div>
         <table id="gridview">
             <thead>

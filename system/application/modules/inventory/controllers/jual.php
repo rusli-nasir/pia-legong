@@ -107,7 +107,10 @@ class Jual extends Controller
 		
 		echo $text;
 	}
-	
+
+    /**
+     * @param $ambil_data
+     */
 	function akses_jual($ambil_data)
 	{
 		$this->index();

@@ -131,10 +131,13 @@ class Model_barang extends Model
 	function summary_barang_jual($data)
 	{
 		$data = explode_date($data,0);
-		$result = $this->db->query("SELECT a.id_barang, a.nama_barang, 
+		$strQuery = "SELECT a.id_barang, a.nama_barang, 
 								   	(SELECT SUM(b.jumlah_stok) FROM tb_detail_penjualan b LEFT JOIN tb_penjualan c ON c.id_penjualan = b.id_penjualan
-										WHERE b.id_barang = a.id_barang AND b.active='1' AND c.tanggal_penjualan='".$data."') stok_penjualan
-									FROM tb_barang a WHERE a.active='1' ORDER BY a.nama_barang ASC;");
+										WHERE b.id_barang = a.id_barang AND b.active='1' AND c.tanggal_penjualan='".$data."') stok_penjualan,
+									( SELECT SUM( d.jumlah_stok ) FROM tb_stok_awal d 
+									WHERE d.id_barang = a.id_barang  AND a.active = '1'  AND d.tanggal_stok_awal = '".$data."' ) stok_produk
+									FROM tb_barang a WHERE a.active='1' ORDER BY a.nama_barang ASC;";
+		$result = $this->db->query($strQuery);
 		return $result;
 	}
 	

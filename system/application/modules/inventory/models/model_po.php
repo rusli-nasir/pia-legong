@@ -205,6 +205,9 @@ ORDER BY a.no_po DESC ");
 								case 'transaksi':
 									$data_query .= "AND a.tanggal_po='$tanggal'";
 									break;
+								case 'pesan':
+									$data_query .= "AND a.tanggal_pesan='$tanggal'";
+									break;
 								case 'pengambilan':
 									$data_query .= "AND DATE(a.tgl_diambil) = '$tanggal'";
 									break;

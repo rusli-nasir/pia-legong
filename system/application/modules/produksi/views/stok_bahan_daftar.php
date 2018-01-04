@@ -168,6 +168,9 @@
 <div class="">
     <fieldset style="border: 1px solid #CCC; padding: 20px 20px; margin-top: 10px;">
     <legend>Daftar Stok Bahan</legend>
+        <div style="margin-bottom:10px; text-align:right;">
+            <a target="_blank" href="<?php echo site_url('produksi/stok_bahan/export_to_pdf/'.$this->uri->segment(4));?>"><input type="button" value="Export Pdf" /></a>
+        </div>
         <table id="gridview">
             <thead>
             <tr>

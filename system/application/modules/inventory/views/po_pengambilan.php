@@ -13,6 +13,7 @@
 					<?php
 					$arrpesanan = array(
 						'transaksi' => 'Tanggal Transaksi',
+						'pesan' => 'Tanggal Pesanan',
 						'pengambilan' => 'Tanggal Pengambilan',
 					);
 					echo form_dropdown('filter',$arrpesanan,$filter,"id='filter' class='cari_data'");

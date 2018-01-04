@@ -533,22 +533,30 @@
         <table id="gridview">
             <tr>
                 <td class="labels_dpo">Nama Barang</td>
+                <td class="labels_dpo">Total Stok Hari Ini</td>
                 <td class="labels_dpo">Total Stok Penjualan</td>
+                <td class="labels_dpo">Sisa Stok Hari Ini</td>
             </tr>
-            <?php 
+            <?php
+            $total_stok_produk = 0;
 			$total_penjualan_stok = 0;
 			foreach($list_barang_jual->result_array() as $row_total)
 			{?>
 				<tr>
                 	<td class="labelss_dpo"><?php echo $row_total['nama_barang'];?></td>
+                	<td class="labelss_dpo"><?php echo round($row_total['stok_produk']);?></td>
                 	<td class="labelss_dpo"><?php echo round($row_total['stok_penjualan']);?></td>
+                	<td class="labelss_dpo"><?php echo round($row_total['stok_produk'] - $row_total['stok_penjualan']);?></td>
                 </tr>
 				<?php 
+				$total_stok_produk += $row_total['stok_produk'];
 				$total_penjualan_stok = $total_penjualan_stok + $row_total['stok_penjualan'];
 			}?>
             <tr>
             	<td class="labelss_dpo">TOTAL</td>
+            	<td class="labelss_dpo"><?php echo round($total_stok_produk);?></td>
             	<td class="labelss_dpo"><?php echo round($total_penjualan_stok);?></td>
+            	<td class="labelss_dpo"><?php echo round($total_stok_produk - $total_penjualan_stok);?></td>
             </tr>
         </table>
 	</fieldset>

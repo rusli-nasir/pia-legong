@@ -32,6 +32,22 @@ class Stok_bahan extends Controller
 		
 		$this->load->view('mainpage', $mydata);
 	}
+
+	function export_to_pdf(){
+        $cek_stok = get_stok_minimal();
+        if($cek_stok > 0)
+            $notif = view_stok_minimal();
+        else
+            $notif = '';
+
+        $date=date('Y-m-d');
+
+        $mydata = array(
+            'list' => $this->model_stok_bahan->view_all_bahan_baku()
+        );
+        $this->load->library('fpdf');
+        $this->load->view('produksi/stok_bahan_daftar_pdf', $mydata);
+    }
 	
 	function add_stok()
 	{

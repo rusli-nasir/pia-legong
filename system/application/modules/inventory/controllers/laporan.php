@@ -121,6 +121,20 @@ class Laporan extends Controller
 		$this->load->library('excel');
 		$this->load->view('inventory/laporan_jual_export_excel', $data);
 	}
+
+    function export_to_pdf($date=""){
+        if($date=="") $date = date('Y-m-d');
+
+        $data['list_barang']	= $this->model_barang->summary_barang($date);
+
+        $data['tanggal'] = $date;
+        $data['perusahaan']['nama_perusahaan'] = 'PIA LEGONG';
+        $data['perusahaan']['lokasi'] = 'Lokasi PIA LEGONG';
+
+        //---------------------------- EXCEL START
+        $this->load->library('fpdf');
+        $this->load->view('inventory/laporan_jual_pdf', $data);
+    }
 	
 	function view_laporan()
 	{
