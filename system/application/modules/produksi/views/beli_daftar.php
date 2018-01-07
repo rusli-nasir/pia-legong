@@ -61,7 +61,7 @@
 		var tgl_beli	= arrtgl[2]+"-"+arrtgl[1]+"-"+arrtgl[0];
 		
 		var tgl2		= $( "#datepicker2" ).val();
-		var arrtgl2		= tgl.split("/");
+		var arrtgl2		= tgl2.split("/");
 		var tgl_beli2	= arrtgl2[2]+"-"+arrtgl2[1]+"-"+arrtgl2[0];
 		
 		$.ajax({
@@ -101,7 +101,8 @@
 			url: "<?php echo base_url();?>index.php/produksi/beli/find_beli_detail2",
 			data: "id_pembelian="+id_pembelian,
 			cache: false,
-			success: function(data){alert(data);
+			success: function(data){
+//			    alert(data);
 				get_data_detail(data);			
 			}
 		});
@@ -111,6 +112,17 @@
 	{
 		$("#tabel_detail").html(mydata);
 	}
+
+	function print_daftar_beli() {
+        var tgl 		= $("#datepicker").val();
+        var arrtgl		= tgl.split("/");
+        var tgl_beli	= arrtgl[2]+"-"+arrtgl[1]+"-"+arrtgl[0];
+
+        var tgl2		= $( "#datepicker2" ).val();
+        var arrtgl2		= tgl2.split("/");
+        var tgl_beli2	= arrtgl2[2]+"-"+arrtgl2[1]+"-"+arrtgl2[0];
+        window.open("<?php echo base_url();?>index.php/produksi/beli/cetak_beli/"+tgl_beli+"_"+tgl_beli2,'_blank');
+    }
 </script>
 
 <span id="image_calendar" style="display:none"><?php echo base_url().'image/calendar.gif';?></span>
@@ -123,21 +135,27 @@
                 <td>
                     <input style="color:#0000FF;" type="text" id="datepicker" name="tgl_pembelian" class="tgl_pembelian" size="10" maxlength="10" readonly="readonly" value="<?php echo explode_date($date1,1);?>" />
                 </td>
-            </tr>
-            <tr>
-                <td style="width: 100px;">&nbsp;</td>
-                <td>Sampai</td>
-            </tr>
-            <tr>
-                <td style="width: 100px;">&nbsp;</td>
+                <td style="padding: 0 10px 0 10px;">Sampai</td>
                 <td>
                     <input style="color:#0000FF;" type="text" id="datepicker2" name="tgl_pembelian2" class="tgl_pembelian2" size="10" maxlength="10" readonly="readonly" value="<?php echo explode_date($date,1);?>" />
+                </td>
+                <td style="padding: 0 10px 0 10px;">
+                    <?php
+                    if($list){
+                        ?>
+                        <a href="javascript:void(0);" onclick="print_daftar_beli();">
+                            <img src="<?php echo base_url().'image/print_icon.png'; ?>" width="30" />
+                        </a>
+                        <?php
+                    }
+                    ?>
                 </td>
             </tr>
         </table>
         <table>
             <tr>
-                <td>&nbsp;</td>
+                <td>
+                </td>
             </tr>
         </table>
         <table id="gridview">

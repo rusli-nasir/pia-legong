@@ -631,5 +631,28 @@ class Beli extends Controller
 		
 		echo $load_data;
 	}
+
+	function cetak_beli($data =""){
+        if($data == "")
+        {
+            $date1 = date('Y').'-'.date('m').'-1';
+            $date = date('Y-m-d');
+        }
+        else
+        {
+            $data = explode('_',$data);
+            $date1 = $data[0];
+            $date = $data[1];
+        }
+
+        $mydata = array(
+            'title'				=> 'Laporan Pembelian',
+            'date1'				=> $date1,
+            'date'       		=> $date,
+            'list'				=> $this->model_beli->view_pembelian_list($date1, $date),
+        );
+        $this->load->library('fpdf');
+        $this->load->view('produksi/laporan_pembelian.php',$mydata);
+    }
 }
 ?>

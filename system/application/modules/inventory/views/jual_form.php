@@ -365,6 +365,10 @@
 			);
 		});
 	}
+
+	function invoice(id) {
+        window.open("<?php echo base_url();?>index.php/inventory/jual/invoice/"+ id,'_blank');
+    }
 </script>
 
 <span id="image_calendar" style="display:none"><?php echo base_url().'image/calendar.gif';?></span>
@@ -432,7 +436,7 @@
                     <td class="labels_dbyr">Nama Barang</td>
                     <td class="labels_dbyr">Quantity</td>
                     <td class="labels_dbyr">Total Harga</td>
-                    <td class="labels_dbyr">Edit</td>
+                    <td class="labels_dbyr">Aksi</td>
                     <td class="labels_dbyr">Batal</td>
                 </tr>
 			</table>
@@ -482,6 +486,9 @@
                                             <a href="javascript:void(0)" onclick="edit_jual('<?php echo $jual_detail['id_penjualan'];?>')">
                                             <span style="display:block">Edit</span>
                                             </a>
+                                            <a href="javascript:void(0)" onclick="invoice('<?php echo $jual_detail['id_penjualan'];?>')">
+                                                <span style="display:block">Invoice</span>
+                                            </a>
                                             <?php 
                                         }
                                         else
@@ -492,6 +499,9 @@
                                         ?>
                                         <a href="javascript:void(0)" onclick="edit_jual('<?php echo $jual_detail['id_penjualan'];?>')">
                                         <span style="display:block">Edit</span>
+                                        </a>
+                                        <a href="javascript:void(0)" onclick="invoice('<?php echo $jual_detail['id_penjualan'];?>')">
+                                        <span style="display:block">Invoice</span>
                                         </a>
                                         <?php
                                     }

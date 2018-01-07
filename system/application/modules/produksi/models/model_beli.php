@@ -71,6 +71,13 @@ class Model_beli extends Model
 										AND (b.tgl_pembelian < '".$data."' OR b.tgl_pembelian = '".$data."') ORDER BY a.id_pembelian ASC;");
 		return $result;
 	}
+
+    function view_pembelian_list($data1, $data)
+    {
+        $result = $this->db->query("SELECT * FROM tb_pembelian 
+									WHERE active = 1 AND tgl_pembelian BETWEEN '$data1' AND '".$data."';");
+        return $result;
+    }
 	
 	function view_pembelian_spesifik($data)
 	{

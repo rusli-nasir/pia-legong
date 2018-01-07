@@ -615,5 +615,10 @@ class Jual extends Controller
 			echo '';
 		}
     }
+
+    function invoice($id){
+	    echo $id;
+        $this->load->view('inventory/invoice_pdf');
+    }
 }
 ?>
